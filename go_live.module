@@ -1,0 +1,80 @@
+<?php
+/**
+ * Implements hook_init()
+ */
+function go_live_init() {
+  if(!variable_get('go_live_is_live', 0) && flood_is_allowed('go_live_devel', 1)) {
+    flood_register_event('go_live_devel');
+    drupal_set_message('REMINDER: This site has not been configured for production use. When you are ready, ' . l('Go Live!', 'admin/go-live'), 'status');
+  }
+}
+
+/**
+ * Implements hook_menu()
+ */
+function go_live_menu() {
+  return array(
+    'admin/go-live' => array(
+      'title' => 'Go Live!',
+      'description' => 'Use this when you are ready to make this site ready for production use or need to update the checklist.',
+      'page callback' => 'drupal_get_form',
+      'page arguments' => array('go_live_admin'),
+      'access callback' => 'user_access', // TODO: This needs changed
+      'access arguments' => array('access content'), // TODO: This needs changed
+      'type' => MENU_NORMAL_ITEM,
+      'file' => 'go_live.admin.inc',
+      'weight' => 1000,
+    ),
+/*    'admin/go-live/view' => array(
+      'title' => 'View',
+      'page callback' => 'go_live_admin',
+      'access arguments' => array('access content'), // TODO: This needs changed
+      'file' => 'go_live.admin.inc',
+      'type' => MENU_DEFAULT_LOCAL_TASK,
+      'weight' => 0,
+    ),
+    'admin/go-live/settings' => array(
+      'title' => 'Settings',
+      'page callback' => 'drupal_get_form',
+      'page arguments' => array('go_live_settings'),
+      'access callback' => 'user_access', // TODO: This needs changed
+      'access arguments' => array('access content'), // TODO: This needs changed
+      'type' => MENU_LOCAL_TASK,
+      'file' => 'go_live.admin.inc',
+      'weight' => 1,
+    ),
+*/
+  );
+}
+
+/**
+ * Implements hook_requirements().
+ *
+ * @param $phase The phase in which hook_requirements is run: install or runtime.
+ */
+function go_live_requirements($phase) {
+  if ($phase == 'runtime') {
+    // Site is not live
+    if (!variable_get('go_live_is_live', 0)) {
+      return array(
+        'go_live' => array(
+          'title' => 'Go Live!',
+          'value' => 'Site is not live',
+          'description' => t('This site has not been configured for production use. When you are ready, ' . l('Go Live!', 'admin/go_live')),
+          'severity' => REQUIREMENT_WARNING,
+        ),
+      );
+    }
+    // Site is live
+    else {
+      return array(
+        'go_live' => array(
+          'title' => 'Go Live!',
+          'value' => 'Site is Live',
+          'description' => t('This site has been configured for production use!'),
+          'severity' => REQUIREMENT_OK,
+        ),
+      );
+    }
+  }
+}

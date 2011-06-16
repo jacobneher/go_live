@@ -1,0 +1,5 @@
+name = Go Live!
+description = Provides a one-stop setup for changing a site's configuration from development to production.
+package = Custom
+core = 7.x
+version = 7.x-1.0
