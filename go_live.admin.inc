@@ -163,6 +163,11 @@ function go_live_admin() {
           '#description' => t('Example: <code>0  *  *  *  *  wget -O - -q -t 1 http://' . $_SERVER['HTTP_HOST'] . '/cron.php</code>'),
           '#default_value' => $go_live_checklist['cronjob'],
         ),
+        'yslow' => array(
+          '#type' => 'checkbox',
+          '#title' => t("Checked site's performance score with YSlow"),
+          '#default_value' => $go_live_checklist['yslow'],
+        ),
       ),
     ),
   );
@@ -296,8 +301,7 @@ function go_live_admin_submit(&$form, &$form_state) {
 
 function go_live_settings() {
   $form['info'] = array(
-    '#type' => 'markup',
-    '#value' => t("This will configure settings on the site to be optimized for production sites. Only click 'Go Live!' below if you are really ready to make this site live."),
+    '#markup' => t("This will configure settings on the site to be optimized for production sites. Only click 'Go Live!' below if you are really ready to make this site live."),
     '#prefix' => '<div>',
     '#suffix' => '</div>',
   );
