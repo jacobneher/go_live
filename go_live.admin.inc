@@ -11,6 +11,116 @@ function go_live_admin() {
     ),
     'go_live' => array(
       '#type' => 'vertical_tabs',
+      'miscellaneous' => array(
+        '#type' => 'fieldset',
+        '#title' => t('Miscellaneous'),
+        'favicon' => array(
+          '#type' => 'checkbox',
+          '#title' => t('A <strong>favicon</strong> has been setup for this site') . ' - ' . l('Configuration Page', 'admin/build/themes/settings/' . variable_get('theme_default', '')),
+          '#default_value' => $go_live_checklist['favicon'],
+        ),
+        'cronjob' => array(
+          '#type' => 'checkbox',
+          '#title' => t('This site has a maintenance <strong>cron job</strong> setup on the server'),
+          '#description' => t('Use: <code>0  *  *  *  *  wget -O - -q -t 1 http://' . $_SERVER['HTTP_HOST'] . '/cron.php?cron_key=' . variable_get('cron_key', '') . '</code>'),
+          '#default_value' => $go_live_checklist['cronjob'],
+        ),
+        'yslow' => array(
+          '#type' => 'checkbox',
+          '#title' => t("Checked site's performance score with YSlow"),
+          '#default_value' => $go_live_checklist['yslow'],
+        ),
+      ),
+      'users' => array(
+        '#type' => 'fieldset',
+        '#title' => t('Users'),
+        'appropriate_users' => array(
+          '#type' => 'checkbox',
+          '#title' => t('All necessary <strong>users</strong> are setup and configured') . ' - ' . l('Configuration Page', 'admin/people', array(attributes => array('target' => '_blank'))),
+          '#default_value' => $go_live_checklist['appropriate_users'],
+        ),
+        'user_roles' => array(
+          '#type' => 'checkbox',
+          '#title' => t('All necessary roles are setup and configured') . ' - ' . l('Configuration Page', 'admin/people/permissions/roles', array(attributes => array('target' => '_blank'))),
+          '#default_value' => $go_live_checklist['user_permissions'],
+        ),
+        'user_permissions' => array(
+          '#type' => 'checkbox',
+          '#title' => t('Permissions for each role are setup and configured') . ' - ' . l('Configuration Page', 'admin/people/permissions', array(attributes => array('target' => '_blank'))),
+          '#default_value' => $go_live_checklist['user_permissions'],
+        ),
+      ),
+      'browsers' => array(
+        '#type' => 'fieldset',
+        '#title' => t('Browsers'),
+        'firefox' => array(
+          '#type' => 'fieldset',
+          '#title' => t('Firefox'),
+          'ff5_compatible'  => array(
+            '#type' => 'checkbox',
+            '#title' => t('<strong>Firefox 4 and 5</strong> have been tested and are rendering all elements correctly'),
+            '#description' => t('<strong>Note:</strong> Firefox 4 was short lived and quickly replaced by Firefox 5, therefore there is no need to check both independently.'),
+            '#default_value' => $go_live_checklist['ff5_compatible'],
+          ),
+          'ff3_compatible'  => array(
+            '#type' => 'checkbox',
+            '#title' => t('<strong>Firefox 3</strong> has been tested and is rendering all elements correctly'),
+            '#default_value' => $go_live_checklist['ff3_compatible'],
+          ),
+        ),
+        'internet_exploder' => array(
+          '#type' => 'fieldset',
+          '#title' => t('Internet Exploder'),
+          'ie9_compatible' => array(
+            '#type' => 'checkbox',
+            '#title' => t('<strong>Internet Exploder 9</strong> has been tested and is rendering all elements correctly'),
+            '#default_value' => $go_live_checklist['ie9_compatible'],
+          ),
+          'ie8_compatible' => array(
+            '#type' => 'checkbox',
+            '#title' => t('<strong>Internet Exploder 8</strong> has been tested and is rendering all elements correctly'),
+            '#default_value' => $go_live_checklist['ie8_compatible'],
+          ),
+          'ie7_compatible' => array(
+            '#type' => 'checkbox',
+            '#title' => t('<strong>Internet Exploder 7</strong> has been tested and is rendering all elements correctly'),
+            '#default_value' => $go_live_checklist['ie7_compatible'],
+          ),
+        ),
+        'chrome' => array(
+          '#type' => 'fieldset',
+          '#title' => t('Chrome'),
+          'chrome_compatible' => array(
+            '#type' => 'checkbox',
+            '#title' => t('<strong>Chrome</strong> has been tested and is rendering all elements correctly'),
+            '#default_value' => $go_live_checklist['chrome_compatible'],
+          ),
+        ),
+        'safari' => array(
+          '#type' => 'fieldset',
+          '#title' => t('Safari'),
+          'safari5_compatible' => array(
+            '#type' => 'checkbox',
+            '#title' => t('<strong>Safari 5</strong> has been tested and is rendering all elements correctly'),
+            '#default_value' => $go_live_checklist['safari5_compatible'],
+          ),
+        ),
+      ),
+      'google' => array(
+        '#type' => 'fieldset',
+        '#title' => t('Google'),
+        'google_webmaster_tools' => array(
+          '#type' => 'checkbox',
+          '#title' => t('This site is setup on <strong>Google Webmaster Tools</strong>') . ' - ' . l('Google Webmaster Page', 'https://www.google.com/webmasters/tools/home?hl=en', array(attributes => array('target' => '_blank'))),
+          '#default_value' => $go_live_checklist['google_webmaster_tools'],
+        ),
+        'google_analytics' => array(
+          '#type' => 'checkbox',
+          '#title' => t('This site is setup on <strong>Google Analytics</strong>') . ' - ' . l('Google Analytics Page', 'https://www.google.com/analytics', array(attributes => array('target' => '_blank'))) . ' | ' . (module_exists('googleanalytics') ? l('Configuration Page', 'admin/settings/googleanalytics', array(attributes => array('target' => '_blank'))) : $module_not_exist),
+          '#default_value' => $go_live_checklist['google_analytics'],
+          '#attributes' => (!module_exists('googleanalytics') ? array('disabled' => 'disabled') : ''),
+        ),
+      ),
       'path_redirection' => array(
         '#type' => 'fieldset',
         '#title' => t('Path Redirection'),
@@ -82,91 +192,6 @@ function go_live_admin() {
           '#type' => 'checkbox',
           '#title' => t('All <strong>webforms</strong> are setup to send email to the appropriate address(es)'),
           '#default_value' => $go_live_checklist['webform_email_configured'],
-        ),
-      ),
-      'users' => array(
-        '#type' => 'fieldset',
-        '#title' => t('Users'),
-        'appropriate_users' => array(
-          '#type' => 'checkbox',
-          '#title' => t('All necessary <strong>users</strong> are setup and configured') . ' - ' . l('Configuration Page', 'admin/user/user', array(attributes => array('target' => '_blank'))),
-          '#default_value' => $go_live_checklist['appropriate_users'],
-        ),
-      ),
-      'browsers' => array(
-        '#type' => 'fieldset',
-        '#title' => t('Browsers'),
-        'internet_exploder' => array(
-          '#type' => 'fieldset',
-          '#title' => t('Internet Exploder'),
-          'ie9_compatible' => array(
-            '#type' => 'checkbox',
-            '#title' => t('<strong>Internet Exploder 9</strong> has been tested and is rendering all elements correctly'),
-            '#default_value' => $go_live_checklist['ie9_compatible'],
-          ),
-          'ie8_compatible' => array(
-            '#type' => 'checkbox',
-            '#title' => t('<strong>Internet Exploder 8</strong> has been tested and is rendering all elements correctly'),
-            '#default_value' => $go_live_checklist['ie8_compatible'],
-          ),
-          'ie7_compatible' => array(
-            '#type' => 'checkbox',
-            '#title' => t('<strong>Internet Exploder 7</strong> has been tested and is rendering all elements correctly'),
-            '#default_value' => $go_live_checklist['ie7_compatible'],
-          ),
-        ),
-        'safari' => array(
-          '#type' => 'fieldset',
-          '#title' => t('Safari'),
-          'safari5_compatible' => array(
-            '#type' => 'checkbox',
-            '#title' => t('<strong>Safari 5</strong> has been tested and is rendering all elements correctly'),
-            '#default_value' => $go_live_checklist['safari5_compatible'],
-          ),
-        ),
-        'chrome' => array(
-          '#type' => 'fieldset',
-          '#title' => t('Chrome'),
-          'chrome_compatible' => array(
-            '#type' => 'checkbox',
-            '#title' => t('<strong>Chrome</strong> has been tested and is rendering all elements correctly'),
-            '#default_value' => $go_live_checklist['chrome_compatible'],
-          ),
-        ),
-      ),
-      'google' => array(
-        '#type' => 'fieldset',
-        '#title' => t('Google'),
-        'google_webmaster_tools' => array(
-          '#type' => 'checkbox',
-          '#title' => t('This site is setup on <strong>Google Webmaster Tools</strong>') . ' - ' . l('Google Webmaster Page', 'https://www.google.com/webmasters/tools/home?hl=en', array(attributes => array('target' => '_blank'))),
-          '#default_value' => $go_live_checklist['google_webmaster_tools'],
-        ),
-        'google_analytics' => array(
-          '#type' => 'checkbox',
-          '#title' => t('This site is setup on <strong>Google Analytics</strong>') . ' - ' . l('Google Analytics Page', 'https://www.google.com/analytics', array(attributes => array('target' => '_blank'))) . ' | ' . (module_exists('googleanalytics') ? l('Configuration Page', 'admin/settings/googleanalytics', array(attributes => array('target' => '_blank'))) : $module_not_exist),
-          '#default_value' => $go_live_checklist['google_analytics'],
-          '#attributes' => (!module_exists('googleanalytics') ? array('disabled' => 'disabled') : ''),
-        ),
-      ),
-      'miscellaneous' => array(
-        '#type' => 'fieldset',
-        '#title' => t('Miscellaneous'),
-        'favicon' => array(
-          '#type' => 'checkbox',
-          '#title' => t('A <strong>favicon</strong> has been setup for this site') . ' - ' . l('Configuration Page', 'admin/build/themes/settings/' . variable_get('theme_default', '')),
-          '#default_value' => $go_live_checklist['favicon'],
-        ),
-        'cronjob' => array(
-          '#type' => 'checkbox',
-          '#title' => t('This site has a maintenance <strong>cron job</strong> setup on the server'),
-          '#description' => t('Example: <code>0  *  *  *  *  wget -O - -q -t 1 http://' . $_SERVER['HTTP_HOST'] . '/cron.php</code>'),
-          '#default_value' => $go_live_checklist['cronjob'],
-        ),
-        'yslow' => array(
-          '#type' => 'checkbox',
-          '#title' => t("Checked site's performance score with YSlow"),
-          '#default_value' => $go_live_checklist['yslow'],
         ),
       ),
     ),
@@ -293,18 +318,5 @@ function go_live_admin_submit(&$form, &$form_state) {
   
   variable_set('go_live_checklist', $checklist_items);
   
-  if($form_state['clicked_button']['#value'] == 'Update Checklist') {
-    drupal_set_message('The checklist settings have been updated');
-  }
-}
-
-
-function go_live_settings() {
-  $form['info'] = array(
-    '#markup' => t("This will configure settings on the site to be optimized for production sites. Only click 'Go Live!' below if you are really ready to make this site live."),
-    '#prefix' => '<div>',
-    '#suffix' => '</div>',
-  );
-  
-  return $form;
+  drupal_set_message('The checklist settings have been updated');
 }

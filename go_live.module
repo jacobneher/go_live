@@ -10,6 +10,18 @@ function go_live_init() {
 }
 
 /**
+ * Implements hook_permission().
+ */
+function go_live_permission() {
+  return array(
+    'access go live' => array(
+      'title'       => t('Access Go Live!'),
+      'description' => t('TODO'),
+    ),
+  );
+}
+
+/**
  * Implements hook_menu()
  */
 function go_live_menu() {
@@ -19,31 +31,12 @@ function go_live_menu() {
       'description' => 'Use this when you are ready to make this site ready for production use or need to update the checklist.',
       'page callback' => 'drupal_get_form',
       'page arguments' => array('go_live_admin'),
-      'access callback' => 'user_access', // TODO: This needs changed
-      'access arguments' => array('access content'), // TODO: This needs changed
+      'access callback' => 'user_access',
+      'access arguments' => array('access go live'),
       'type' => MENU_NORMAL_ITEM,
       'file' => 'go_live.admin.inc',
       'weight' => 1000,
     ),
-/*    'admin/go-live/view' => array(
-      'title' => 'View',
-      'page callback' => 'go_live_admin',
-      'access arguments' => array('access content'), // TODO: This needs changed
-      'file' => 'go_live.admin.inc',
-      'type' => MENU_DEFAULT_LOCAL_TASK,
-      'weight' => 0,
-    ),
-    'admin/go-live/settings' => array(
-      'title' => 'Settings',
-      'page callback' => 'drupal_get_form',
-      'page arguments' => array('go_live_settings'),
-      'access callback' => 'user_access', // TODO: This needs changed
-      'access arguments' => array('access content'), // TODO: This needs changed
-      'type' => MENU_LOCAL_TASK,
-      'file' => 'go_live.admin.inc',
-      'weight' => 1,
-    ),
-*/
   );
 }
 
